@@ -1,14 +1,14 @@
 package com.example.addressforms;
 
 import com.example.addressforms.views.AddressBookView;
-import com.vaadin.Application;
-import com.vaadin.ui.Window;
+import com.vaadin.Application.LegacyApplication;
+import com.vaadin.ui.Root;
 
-public class AddressformsApplication extends Application {
+public class AddressformsApplication extends LegacyApplication {
     @Override
     public void init() {
         AddressBookView view = new AddressBookView();
-        Window mainWindow = new Window("Addressforms Application", view);
+        Root mainWindow = new Root("Addressforms Application", view);
         setMainWindow(mainWindow);
         setTheme("address-theme");
     }

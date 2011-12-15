@@ -3,9 +3,9 @@ package com.example.addressforms.fields;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.vaadin.addon.customfield.CustomField;
-
 import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 
@@ -50,66 +50,7 @@ public class SimpleDateField extends CustomField {
 
     public SimpleDateField(String caption) {
         setCaption(caption);
-        day = new NativeSelect();
-        day.addItem("Day");
-        for (int i = 1; i < 32; i++) {
-            day.addItem(i + "");
-        }
-        day.select("Day");
 
-        month = new NativeSelect();
-        month.addItem("Month");
-        month.addItem(Month.JANUARY);
-        month.addItem(Month.FEBUARY);
-        month.addItem(Month.MARS);
-        month.addItem(Month.APRIL);
-        month.addItem(Month.MAY);
-        month.addItem(Month.JUNE);
-        month.addItem(Month.JULY);
-        month.addItem(Month.AUGUST);
-        month.addItem(Month.SEPTEMBER);
-        month.addItem(Month.OCTOBER);
-        month.addItem(Month.NOVEMBER);
-        month.addItem(Month.DECEMBER);
-        month.select("Month");
-
-        year = new NativeSelect();
-        year.addItem("Year");
-        System.out.println(Calendar.getInstance().get(Calendar.YEAR));
-        for (int i = Calendar.getInstance().get(Calendar.YEAR); i > 1900; i--) {
-            year.addItem(i + "");
-        }
-        year.select("Year");
-        day.setNullSelectionAllowed(false);
-        month.setNullSelectionAllowed(false);
-        year.setNullSelectionAllowed(false);
-
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.addComponent(day);
-        layout.addComponent(month);
-        layout.addComponent(year);
-        layout.setWidth("100%");
-        layout.setHeight(null);
-        day.setWidth("100%");
-        month.setWidth("100%");
-        year.setWidth("100%");
-        setCompositionRoot(layout);
-        addValidator(new AbstractValidator("Please select a date") {
-            private static final long serialVersionUID = 6023987693208168293L;
-
-            public boolean isValid(Object value) {
-                if (day.getValue() == "Day") {
-                    return false;
-                }
-                if (month.getValue() == "Month") {
-                    return false;
-                }
-                if (year.getValue() == "Year") {
-                    return false;
-                }
-                return true;
-            }
-        });
     }
 
     @Override
@@ -166,6 +107,80 @@ public class SimpleDateField extends CustomField {
             calendar.set(Calendar.YEAR, new Integer(yearValue.toString()));
         }
         return calendar.getTime();
+    }
+
+    @Override
+    protected Component createContent() {
+        day = new NativeSelect();
+        day.addItem("Day");
+        for (int i = 1; i < 32; i++) {
+            day.addItem(i + "");
+        }
+        day.select("Day");
+
+        month = new NativeSelect();
+        month.addItem("Month");
+        month.addItem(Month.JANUARY);
+        month.addItem(Month.FEBUARY);
+        month.addItem(Month.MARS);
+        month.addItem(Month.APRIL);
+        month.addItem(Month.MAY);
+        month.addItem(Month.JUNE);
+        month.addItem(Month.JULY);
+        month.addItem(Month.AUGUST);
+        month.addItem(Month.SEPTEMBER);
+        month.addItem(Month.OCTOBER);
+        month.addItem(Month.NOVEMBER);
+        month.addItem(Month.DECEMBER);
+        month.select("Month");
+
+        year = new NativeSelect();
+        year.addItem("Year");
+        System.out.println(Calendar.getInstance().get(Calendar.YEAR));
+        for (int i = Calendar.getInstance().get(Calendar.YEAR); i > 1900; i--) {
+            year.addItem(i + "");
+        }
+        year.select("Year");
+        day.setNullSelectionAllowed(false);
+        month.setNullSelectionAllowed(false);
+        year.setNullSelectionAllowed(false);
+
+        day.setImmediate(true);
+        month.setImmediate(true);
+        year.setImmediate(true);
+
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.addComponent(day);
+        layout.addComponent(month);
+        layout.addComponent(year);
+        layout.setWidth("100%");
+        layout.setHeight(null);
+        day.setWidth("100%");
+        month.setWidth("100%");
+        year.setWidth("100%");
+        addValidator(new AbstractValidator("Please select a date") {
+            private static final long serialVersionUID = 6023987693208168293L;
+
+            @Override
+            protected boolean isValidValue(Object value) {
+                if (day.getValue().equals("Day")) {
+                    return false;
+                }
+                if (month.getValue().equals("Month")) {
+                    return false;
+                }
+                if (year.getValue().equals("Year")) {
+                    return false;
+                }
+                return true;
+            }
+
+            @Override
+            public Class getType() {
+                return Date.class;
+            }
+        });
+        return layout;
     }
 
 }

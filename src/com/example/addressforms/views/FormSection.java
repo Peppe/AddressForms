@@ -13,8 +13,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window.Notification;
 
 public class FormSection extends Section {
 
@@ -62,7 +62,7 @@ public class FormSection extends Section {
                 } catch (InvalidValueException e) {
                     // don't do anything if validation fails.
                 } catch (UpdatingNonexistantPersonException e) {
-                    getWindow()
+                    getRoot()
                             .showNotification(
                                     "An system error has occured. We're terribly sorry!",
                                     Notification.TYPE_ERROR_MESSAGE);

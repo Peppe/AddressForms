@@ -48,7 +48,7 @@ public class Util {
                 + street1[generator.nextInt(street1.length)] + " "
                 + street2[generator.nextInt(street2.length)]);
         address.setCity(cityNames[generator.nextInt(cityNames.length)]);
-        address.setZip((generator.nextInt(9000) * 10 + 10000));
+        address.setZip((generator.nextInt(9000) * 10 + 10000) + "");
         address.setCountry("Finland");
         person.setAddress(address);
         Calendar calendar = Calendar.getInstance();

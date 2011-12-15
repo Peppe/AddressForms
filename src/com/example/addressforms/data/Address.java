@@ -3,7 +3,7 @@ package com.example.addressforms.data;
 public class Address implements Cloneable {
 
     private String street;
-    private Integer zip;
+    private String zip;
     private String city;
     private String country;
 
@@ -15,11 +15,11 @@ public class Address implements Cloneable {
         this.street = street;
     }
 
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 
