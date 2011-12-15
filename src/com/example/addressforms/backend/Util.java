@@ -28,10 +28,6 @@ public class Util {
             "Foley" };
     private static String[] cityNames = { "Abgood", "Brilliant", "Coffeeville",
             "Five Forks", "Rainbow", "Shades Run", "Baarda", "Eek", "Kake" };
-    private static String[] groupNames = { "Squirrels", "Vipers", "Beavers",
-            "Wombats", "Foxes", "Cougars", "Canaries", "Kittens", "Mules",
-            "Weasels" };
-
     private static String[] street1 = { "Amber", "Anchor", "Blue", "Apple",
             "Bright", "Autumn", "Broad", "Barn", "Burning", "Beacon", "Cinder",
             "Bear", "Clear", "Berry", "Colonial", "Blossom", "Cotton", "Bluff",
