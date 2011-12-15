@@ -1,0 +1,130 @@
+@import "../chameleon/styles.css";
+@import "blue-chameleon.css";
+
+input.v-textfield-very-big[type="text"], 
+.v-datefield-very-big input.v-datefield-textfield[type="text"] {
+padding: .3em;
+}
+
+body input.v-textfield-very-big, 
+body textarea.v-textarea-very-big, 
+.v-datefield-very-big .v-datefield-textfield, 
+.v-datefield-very-big .v-datefield-button, 
+.v-filterselect-very-big .v-filterselect-input {
+	font-size: 2em;	
+}
+
+.v-app {
+	background:#C6E9F7 url('background.png') repeat left top;
+}
+
+.address-view-inner{
+	margin: 0 auto;
+	width:840px;
+}
+
+.view-caption{
+	/* this was the code used when the header was still text. now it is an image. */
+	/*	
+	font-size:36px;
+	line-height:38px;
+	height:38px;
+	text-align:center;
+	margin-top:15px;
+	margin-bottom:15px;
+	font-family:Verdana, serif;	
+	font-weight: bold;
+	color: #005c7b;
+	text-transform:uppercase;
+	*/
+	margin:0 auto;
+}
+
+.button-bar {
+	margin-bottom:10px;
+}
+
+.section{
+}
+
+.section-header .v-label{
+	font-size:22px;
+	line-height:24px;
+	height:24px;
+	margin-top:8px;
+	margin-bottom:8px;
+	margin-left:40px;
+	font-family:"Lucida Console", serif;	
+}
+
+.section-pink {
+	background:transparent url('banner-pink.png') no-repeat left top;
+}
+
+.section-green {
+	background:transparent url('banner-green.png') no-repeat left top;
+}
+
+.section-orange {
+	background:transparent url('banner-orange.png') no-repeat left top;
+}
+
+.section-blue {
+	background:transparent url('banner-blue.png') no-repeat left top;
+}
+
+
+.section-header.section-pink .v-label{
+	color:#e61e6e;
+}
+
+.section-header.section-green .v-label{
+	color:#1f5913;
+}
+
+.section-header.section-orange .v-label{
+	color:#814304;
+}
+
+.section-header.section-blue .v-label{
+	color:#004156;
+}
+.section-content {
+	background-color:white;
+	margin-left:20px;
+	margin-right:20px;
+	width:800px;
+}
+
+.section-content .v-csslayout-margin{
+	margin-left:20px;
+	margin-right:20px;
+	margin-bottom:20px;
+}
+
+.section-content .v-csslayout-margin .v-csslayout-margin{
+	margin-left:0;
+	margin-right:0;
+	margin-bottom:0;
+}
+
+.button-add{
+	border-bottom:none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	-webkit-border-top-left-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	border-top-left-radius: 4px;
+}
+
+.button-delete{
+	border-bottom:none;
+	border-left:none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	-webkit-border-top-right-radius: 4px;
+	-moz-border-radius-topright: 4px;
+	border-top-right-radius: 4px;
+}
