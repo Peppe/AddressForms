@@ -84,12 +84,6 @@ public class SimpleDateField extends CustomField {
     }
 
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException,
-            ConversionException {
-        setInternalValue(newValue);
-    }
-
-    @Override
     public Object getValue() {
         Calendar calendar = Calendar.getInstance();
         Object dayValue = day.getValue();
