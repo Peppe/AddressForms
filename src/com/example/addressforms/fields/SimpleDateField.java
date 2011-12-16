@@ -3,13 +3,13 @@ package com.example.addressforms.fields;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 
-public class SimpleDateField extends CustomField {
+public class SimpleDateField extends CustomField<Date> {
 
     private static final long serialVersionUID = -6387909886861821720L;
     private NativeSelect day;
@@ -50,57 +50,6 @@ public class SimpleDateField extends CustomField {
 
     public SimpleDateField(String caption) {
         setCaption(caption);
-
-    }
-
-    @Override
-    public Class<?> getType() {
-        return Date.class;
-    }
-
-    @Override
-    protected void setInternalValue(Object newValue) {
-        if (newValue == null) {
-            day.select("Day");
-            month.select("Month");
-            year.select("Year");
-            return;
-        }
-        if (newValue instanceof Date) {
-            Date date = (Date) newValue;
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-
-            // FIXME Integer to int conversion problem
-            day.select(calendar.get(Calendar.DAY_OF_MONTH) + "");
-            int monthNr = calendar.get(Calendar.MONTH);
-            Month[] months = Month.values();
-            month.select(months[monthNr]);
-            year.select(calendar.get(Calendar.YEAR) + "");
-            return;
-        }
-        throw new ConversionException(
-                "Only Date.class accepted in setValue of SimpleDateField");
-    }
-
-    @Override
-    public Object getValue() {
-        Calendar calendar = Calendar.getInstance();
-        Object dayValue = day.getValue();
-        Object monthValue = month.getValue();
-        Object yearValue = year.getValue();
-
-        if (dayValue != "Day") {
-            calendar.set(Calendar.DAY_OF_MONTH,
-                    new Integer(dayValue.toString()));
-        }
-        if (monthValue != "Month") {
-            calendar.set(Calendar.MONTH, ((Month) monthValue).getMonthNr() - 1);
-        }
-        if (yearValue != "Year") {
-            calendar.set(Calendar.YEAR, new Integer(yearValue.toString()));
-        }
-        return calendar.getTime();
     }
 
     @Override
@@ -152,29 +101,72 @@ public class SimpleDateField extends CustomField {
         day.setWidth("100%");
         month.setWidth("100%");
         year.setWidth("100%");
-        addValidator(new AbstractValidator("Please select a date") {
-            private static final long serialVersionUID = 6023987693208168293L;
-
-            @Override
-            protected boolean isValidValue(Object value) {
-                if (day.getValue().equals("Day")) {
-                    return false;
-                }
-                if (month.getValue().equals("Month")) {
-                    return false;
-                }
-                if (year.getValue().equals("Year")) {
-                    return false;
-                }
-                return true;
-            }
-
-            @Override
-            public Class getType() {
-                return Date.class;
-            }
-        });
         return layout;
+    }
+
+    @Override
+    public Class<Date> getType() {
+        return Date.class;
+    }
+
+    @Override
+    protected void setInternalValue(Date newValue) {
+        if (newValue == null) {
+            day.select("Day");
+            month.select("Month");
+            year.select("Year");
+            return;
+        }
+        if (newValue instanceof Date) {
+            Date date = newValue;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            // FIXME Integer to int conversion problem
+            day.select(calendar.get(Calendar.DAY_OF_MONTH) + "");
+            int monthNr = calendar.get(Calendar.MONTH);
+            Month[] months = Month.values();
+            month.select(months[monthNr]);
+            year.select(calendar.get(Calendar.YEAR) + "");
+            return;
+        }
+        throw new ConversionException(
+                "Only Date.class accepted in setValue of SimpleDateField");
+    }
+
+    @Override
+    public Date getValue() {
+        Calendar calendar = Calendar.getInstance();
+        Object dayValue = day.getValue();
+        Object monthValue = month.getValue();
+        Object yearValue = year.getValue();
+
+        if (dayValue != "Day") {
+            calendar.set(Calendar.DAY_OF_MONTH,
+                    new Integer(dayValue.toString()));
+        }
+        if (monthValue != "Month") {
+            calendar.set(Calendar.MONTH, ((Month) monthValue).getMonthNr() - 1);
+        }
+        if (yearValue != "Year") {
+            calendar.set(Calendar.YEAR, new Integer(yearValue.toString()));
+        }
+        return calendar.getTime();
+    }
+
+    @Override
+    public void validate() throws InvalidValueException {
+        // TODO Auto-generated method stub
+        super.validate();
+        if (day.getValue().equals("Day")) {
+            throw new InvalidValueException("Fill in the date");
+        }
+        if (month.getValue().equals("Month")) {
+            throw new InvalidValueException("Fill in the date");
+        }
+        if (year.getValue().equals("Year")) {
+            throw new InvalidValueException("Fill in the date");
+        }
     }
 
 }
