@@ -1,7 +1,6 @@
 package com.example.addressforms.views;
 
 import java.util.List;
-import java.util.Locale;
 
 import com.example.addressforms.data.Person;
 import com.example.addressforms.views.AddressBookView.TableInterface;
@@ -66,8 +65,6 @@ public class TableSection extends Section {
 
     private Table buildTable() {
         final Table table = new Table(null);
-        // FIXME: workaround
-        table.setLocale(new Locale("FI"));
         table.addStyleName(ChameleonTheme.TABLE_STRIPED);
         table.setPageLength(15);
         table.setWidth("100%");

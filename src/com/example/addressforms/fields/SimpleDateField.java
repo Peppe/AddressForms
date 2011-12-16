@@ -105,6 +105,11 @@ public class SimpleDateField extends CustomField<Date> {
     }
 
     @Override
+    public boolean isModified() {
+        return getInternalValue().equals(getPropertyDataSource().getValue());
+    }
+
+    @Override
     public Class<Date> getType() {
         return Date.class;
     }
@@ -135,7 +140,7 @@ public class SimpleDateField extends CustomField<Date> {
     }
 
     @Override
-    public Date getValue() {
+    public Date getInternalValue() {
         Calendar calendar = Calendar.getInstance();
         Object dayValue = day.getValue();
         Object monthValue = month.getValue();
@@ -157,7 +162,6 @@ public class SimpleDateField extends CustomField<Date> {
     @Override
     public void validate() throws InvalidValueException {
         // TODO Auto-generated method stub
-        super.validate();
         if (day.getValue().equals("Day")) {
             throw new InvalidValueException("Fill in the date");
         }
@@ -167,6 +171,7 @@ public class SimpleDateField extends CustomField<Date> {
         if (year.getValue().equals("Year")) {
             throw new InvalidValueException("Fill in the date");
         }
+        super.validate();
     }
 
 }
