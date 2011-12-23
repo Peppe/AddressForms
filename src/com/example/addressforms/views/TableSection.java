@@ -49,6 +49,7 @@ public class TableSection extends Section {
             }
         });
         add.addStyleName("button-add");
+
         Button delete = new Button("Delete", new ClickListener() {
             private static final long serialVersionUID = 2098293913889446104L;
 
@@ -58,6 +59,7 @@ public class TableSection extends Section {
             }
         });
         delete.addStyleName("button-delete");
+
         layout.addComponent(add);
         layout.addComponent(delete);
         return layout;

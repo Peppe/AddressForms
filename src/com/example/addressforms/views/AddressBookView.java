@@ -16,6 +16,28 @@ public class AddressBookView extends CssLayout {
     private TableSection tableSection;
     private FormSection formSection;
 
+    public AddressBookView() {
+        addStyleName("address-view");
+        setWidth("100%");
+        setHeight(null);
+        backend = new Backend();
+
+        CssLayout innerLayout = new CssLayout();
+        innerLayout.addStyleName("address-view-inner");
+        innerLayout.setHeight(null);
+        addComponent(innerLayout);
+
+        Embedded headerCaption = new Embedded(null, new ThemeResource(
+                "header.png"));
+        headerCaption.setSizeUndefined();
+        headerCaption.addStyleName("view-caption");
+        tableSection = new TableSection(tableInterface);
+        formSection = new FormSection(formInterface);
+        innerLayout.addComponent(headerCaption);
+        innerLayout.addComponent(tableSection);
+        innerLayout.addComponent(formSection);
+    }
+
     public interface TableInterface {
         public void editPerson(Person person);
 
@@ -57,28 +79,4 @@ public class AddressBookView extends CssLayout {
         }
 
     };
-
-    public AddressBookView() {
-        addStyleName("address-view");
-        setWidth("100%");
-        setHeight(null);
-        backend = new Backend();
-
-        CssLayout innerLayout = new CssLayout();
-        innerLayout.addStyleName("address-view-inner");
-        innerLayout.setHeight(null);
-        addComponent(innerLayout);
-
-        // Label headerCaption = new Label("The Address Book");
-        Embedded headerCaption = new Embedded(null, new ThemeResource(
-                "header.png"));
-        headerCaption.setSizeUndefined();
-        headerCaption.addStyleName("view-caption");
-        tableSection = new TableSection(tableInterface);
-        formSection = new FormSection(formInterface);
-        innerLayout.addComponent(headerCaption);
-        innerLayout.addComponent(tableSection);
-        innerLayout.addComponent(formSection);
-    }
-
 }

@@ -1,55 +1,93 @@
 package com.example.addressforms.views;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.example.addressforms.backend.Backend.NameClashException;
+import com.example.addressforms.backend.Backend.UpdatingNonexistantPersonException;
+import com.example.addressforms.data.Person;
 import com.example.addressforms.fields.SimpleDateField;
+import com.example.addressforms.views.AddressBookView.FormInterface;
 import com.vaadin.data.Item;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
+import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.IntegerValidator;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Form;
-import com.vaadin.ui.FormFieldFactory;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class PersonForm extends Form implements FormFieldFactory {
+public class PersonForm extends HorizontalLayout {
     private static final long serialVersionUID = -5518333607893495007L;
 
-    HorizontalLayout layout;
+    private final FieldGroup fieldGroup = new BeanFieldGroup<Person>(
+            Person.class);
 
-    private Map<Object, Field> fields = new HashMap<Object, Field>();
+    private TextField firstName;
+    private TextField lastName;
+    private TextField phoneNumber;
+    private TextField email;
+    private SimpleDateField dateOfBirth;
+    private TextArea comments;
+    @PropertyId("address.street")
+    private TextArea street;
+    @PropertyId("address.zip")
+    private TextField zip;
+    @PropertyId("address.city")
+    private TextField city;
+    @PropertyId("address.country")
+    private TextField country;
 
-    public PersonForm() {
-        setWriteThrough(false);
+    public PersonForm(final FormInterface formInterface) {
+        fieldGroup.addCommitHandler(new CommitHandler() {
 
-        layout = new HorizontalLayout();
-        layout.setWidth("100%");
-        layout.setHeight(null);
-        layout.setSpacing(true);
-        TextField firstName = new TextField();
+            public void preCommit(CommitEvent commitEvent)
+                    throws CommitException {
+            }
+
+            public void postCommit(CommitEvent commitEvent)
+                    throws CommitException {
+                try {
+                    formInterface.storePerson(((BeanItem<Person>) fieldGroup
+                            .getItemDataSource()).getBean());
+                } catch (NameClashException e) {
+                    throw new CommitException(e);
+                } catch (UpdatingNonexistantPersonException e) {
+                    getRoot()
+                            .showNotification(
+                                    "An system error has occured. We're terribly sorry!",
+                                    Notification.TYPE_ERROR_MESSAGE);
+                    throw new CommitException(e);
+                }
+            }
+        });
+        setWidth("100%");
+        setHeight(null);
+        setSpacing(true);
+
+        firstName = new TextField();
         firstName.setWidth("100%");
         firstName.setInputPrompt("First name");
         firstName.addStyleName("very-big");
-        TextField lastName = new TextField();
+        lastName = new TextField();
         lastName.setWidth("100%");
         lastName.setInputPrompt("Last name");
         lastName.addStyleName("very-big");
-        TextField phoneNumber = new TextField("Phone Number:");
-        TextField email = new TextField("E-mail address:");
-        SimpleDateField dateOfBirth = new SimpleDateField("Date of birth:");
-        TextArea comments = new TextArea("Comments:");
+        phoneNumber = new TextField("Phone Number:");
+        email = new TextField("E-mail address:");
+        dateOfBirth = new SimpleDateField("Date of birth:");
+        comments = new TextArea("Comments:");
 
-        TextArea street = new TextArea("Street address:");
-
-        TextField zip = new TextField("Zip code:");
-        TextField city = new TextField("City:");
-        TextField country = new TextField("Country:");
-
+        street = new TextArea("Street address:");
+        zip = new TextField("Zip code:");
+        city = new TextField("City:");
+        country = new TextField("Country:");
         zip.addValidator(new IntegerValidator("Zip code is not a number"));
+
         firstName.setNullRepresentation("");
         lastName.setNullRepresentation("");
         phoneNumber.setNullRepresentation("");
@@ -81,25 +119,16 @@ public class PersonForm extends Form implements FormFieldFactory {
         city.setTabIndex(9);
         country.setTabIndex(10);
 
-        fields.put("firstName", firstName);
-        fields.put("lastName", lastName);
-        fields.put("phoneNumber", phoneNumber);
-        fields.put("email", email);
-        fields.put("dateOfBirth", dateOfBirth);
-        fields.put("comments", comments);
-        fields.put("address.street", street);
-        fields.put("address.zip", zip);
-        fields.put("address.city", city);
-        fields.put("address.country", country);
+        fieldGroup.buildAndBindMemberFields(this);
 
         VerticalLayout leftColumn = new VerticalLayout();
         VerticalLayout rightColumn = new VerticalLayout();
         FormLayout leftForm = new FormLayout();
         FormLayout rightForm = new FormLayout();
-        layout.addComponent(leftColumn);
-        layout.addComponent(rightColumn);
-        layout.setExpandRatio(leftColumn, 1);
-        layout.setExpandRatio(rightColumn, 1);
+        addComponent(leftColumn);
+        addComponent(rightColumn);
+        setExpandRatio(leftColumn, 1);
+        setExpandRatio(rightColumn, 1);
 
         leftForm.addComponent(phoneNumber);
         leftForm.addComponent(email);
@@ -115,15 +144,15 @@ public class PersonForm extends Form implements FormFieldFactory {
         leftColumn.addComponent(leftForm);
         rightColumn.addComponent(lastName);
         rightColumn.addComponent(rightForm);
-
-        setLayout(layout);
-        setFormFieldFactory(this);
         setEnabled(false);
     }
 
-    @Override
+    public Item getItemDataSource() {
+        return fieldGroup.getItemDataSource();
+    }
+
     public void setItemDataSource(Item newDataSource) {
-        super.setItemDataSource(newDataSource);
+        fieldGroup.setItemDataSource(newDataSource);
         if (newDataSource == null) {
             setEnabled(false);
         } else {
@@ -132,24 +161,23 @@ public class PersonForm extends Form implements FormFieldFactory {
     }
 
     @Override
-    protected void attachField(Object propertyId, Field field) {
-    }
-
-    @Override
-    protected void detachField(Field field) {
-    }
-
-    public Field createField(Item item, Object propertyId, Component uiContext) {
-        return fields.get(propertyId);
-    }
-
-    @Override
     public void focus() {
-        Field field = fields.get("firstName");
-        if (field != null) {
-            field.focus();
-        } else {
-            super.focus();
-        }
+        firstName.focus();
+        // binder.getFields().iterator().next().focus();
+        // Field field = fields.get("firstName");
+        // if (field != null) {
+        // field.focus();
+        // } else {
+        // super.focus();
+        // }
     }
+
+    public void commit() throws CommitException {
+        fieldGroup.commit();
+    }
+
+    public void discard() {
+        fieldGroup.discard();
+    }
+
 }

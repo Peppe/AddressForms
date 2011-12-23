@@ -1,25 +1,21 @@
 package com.example.addressforms.views;
 
-import com.example.addressforms.backend.Backend.NameClashException;
-import com.example.addressforms.backend.Backend.UpdatingNonexistantPersonException;
 import com.example.addressforms.data.Person;
 import com.example.addressforms.views.AddressBookView.FormInterface;
-import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.NestedMethodProperty;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Form;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 
 public class FormSection extends Section {
 
     private final FormInterface formInterface;
-    private Form form;
+    private PersonForm form;
     private CssLayout buttonBar;
     private Label errorMessage;
 
@@ -38,8 +34,8 @@ public class FormSection extends Section {
         setContent(formLayout);
     }
 
-    private Form buildForm() {
-        PersonForm form = new PersonForm();
+    private PersonForm buildForm() {
+        PersonForm form = new PersonForm(formInterface);
         return form;
     }
 
@@ -54,18 +50,8 @@ public class FormSection extends Section {
             public void buttonClick(ClickEvent event) {
                 try {
                     form.commit();
-                    formInterface.storePerson(((BeanItem<Person>) form
-                            .getItemDataSource()).getBean());
-                } catch (NameClashException e) {
-                    // TODO Revert commit.
-                    e.printStackTrace();
-                } catch (InvalidValueException e) {
-                    // don't do anything if validation fails.
-                } catch (UpdatingNonexistantPersonException e) {
-                    getRoot()
-                            .showNotification(
-                                    "An system error has occured. We're terribly sorry!",
-                                    Notification.TYPE_ERROR_MESSAGE);
+                } catch (CommitException e) {
+                    // Todo should we do anything anymore here?
                 }
             }
         });
@@ -87,14 +73,15 @@ public class FormSection extends Section {
 
     public BeanItem<Person> buildBeanItem(Person person) {
         BeanItem<Person> item = new BeanItem<Person>(person);
-        item.addItemProperty("address.street", new NestedMethodProperty(person,
-                "address.street"));
-        item.addItemProperty("address.zip", new NestedMethodProperty(person,
-                "address.zip"));
-        item.addItemProperty("address.city", new NestedMethodProperty(person,
-                "address.city"));
-        item.addItemProperty("address.country", new NestedMethodProperty(
-                person, "address.country"));
+        // FIXME: should the generics be the same type as the bean field?
+        item.addItemProperty("address.street",
+                new NestedMethodProperty<String>(person, "address.street"));
+        item.addItemProperty("address.zip", new NestedMethodProperty<String>(
+                person, "address.zip"));
+        item.addItemProperty("address.city", new NestedMethodProperty<String>(
+                person, "address.city"));
+        item.addItemProperty("address.country",
+                new NestedMethodProperty<String>(person, "address.country"));
         return item;
     }
 

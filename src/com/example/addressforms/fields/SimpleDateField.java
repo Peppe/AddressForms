@@ -53,7 +53,7 @@ public class SimpleDateField extends CustomField<Date> {
     }
 
     @Override
-    protected Component createContent() {
+    protected Component initContent() {
         day = new NativeSelect();
         day.addItem("Day");
         for (int i = 1; i < 32; i++) {
@@ -135,7 +135,7 @@ public class SimpleDateField extends CustomField<Date> {
             year.select(calendar.get(Calendar.YEAR) + "");
             return;
         }
-        throw new ConversionException(
+        throw new InvalidValueException(
                 "Only Date.class accepted in setValue of SimpleDateField");
     }
 
